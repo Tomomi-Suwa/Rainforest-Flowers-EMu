@@ -1,8 +1,9 @@
 #Preparing batch upload of Rainforest Flowers data to Catalogue module (Description tab)
 list.files()
-flr<-read.csv('Verified_RI19_26_27_28_24_aggregated_simple.csv' ,na.strings = c("", "NA"))
+flr<-read.csv('./SimplifiedRawData/Verified_All_Old_no_ferns_section1_simple.csv' ,na.strings = c("", "NA"))
 
-library("tidyverse")
+library("dplyr")
+library("tidyr")
 #=============================================================================================================
 #PART I: Preparing Material Field####
 #=============================================================================================================
@@ -14,7 +15,12 @@ head(flr)
 flr2<-flr[,c(2,4,7,10)]
 str(flr2)
 
-
+#how many rows have NA for colums 3,7 and 10? Answer:181
+flr2NA<-flr2%>%
+            filter(is.na(Flower)) %>%
+            filter(is.na(Fruit)) %>%
+            filter(is.na(Anything.else)) 
+  
 #Split "Anything.else" column by ", "
 flr2$Anything.else<-as.character(flr2$Anything.else)
 flr3<-flr2%>% 
@@ -64,7 +70,7 @@ setnames(flr.spread, old=c("Catalog.IRN","1", "2", "3", "4", "5", "6"),
                "DesMaterials_tab(3)", "DesMaterials_tab(4)","DesMaterials_tab(5)", "DesMaterials_tab(6)"))
 head(flr.spread)
 
-#write.csv(flr.spread, "Cat.Materials_RI19_26_27_28_24.csv",row.names=FALSE)
+#write.csv(flr.spread, "Cat.Materials_All_Old_no_ferns_section1.csv",row.names=FALSE)
 #Note: two Catalogue records were not found in EMu (3825035, 3835174)
 
 #1.5. Preparing the dataframe for Part III####
@@ -77,7 +83,7 @@ flr.spread3<-unite(flr.spread, parts, "DesMaterials_tab(1)":"DesMaterials_tab(6)
  #flr.spread3$parts <- gsub("|", "", flr.spread3$parts)
 #gsub("|| ", "", flr.spread3$parts)
 
-#write.csv(flr.spread3, "Measures_for_Description_RI19_26_27_28_24.csv" )
+#write.csv(flr.spread3, "Measures_for_Descriptio_All_Old_no_ferns_section1.csv" )
 #=============================================================================================================
 #PART II: Preparing Description Field ####
 #=============================================================================================================
@@ -129,8 +135,10 @@ col.DFl.spread<-col.unique.DFl%>%group_by(Catalog.IRN)%>%
                                      value=color,
                                      fill="")
 #concatinate all the colors                          
+##note: note make sure to adjust the "1","2" part. they're the name of columns on "col.DFl.spread"
+
 col.DFl.con<-col.DFl.spread%>%
-  unite("DomFlColor","1","2","3",remove = FALSE, sep =" ")
+  unite("DomFlColor","1","2",remove = FALSE, sep =" ")
 #show the white space
 paste(col.DFl.con$DomFlColor)
 # trimming leading or trailing whitespace
@@ -149,7 +157,6 @@ DominantFlColor<-DominantFlColor %>%
   mutate_all(tolower)
 
 #b)2.3.2. Other Flower####
-
 #find the unique "category"="OtherFlower" for each Catalog.IRN 
 col.unique.OFl<-col.gather2%>%filter(category %in%  c("Other.Flower1","Other.Flower2","Other.Flower3","Other.Flower4", "Other.Flower5","Other.Flower6", "Other.Flower7","Other.Flower8","Other.Flower9"))%>%
                             select(-category)%>%
@@ -162,8 +169,9 @@ col.OFl.spread<-col.unique.OFl%>%group_by(Catalog.IRN)%>%
          value=color,
          fill="")
 #concatinate all the colors                          
+#note: note make sure to adjust the "1","2","3","4","5" part. they're the name of columns on "col.OFl.spread"
 col.OFl.con<-col.OFl.spread%>%
-  unite("OtherFlColor","1","2","3","4",remove = FALSE, sep =" ")
+  unite("OtherFlColor","1","2","3","4","5",remove = FALSE, sep =" ")
 #show the white space
 paste(col.OFl.con$OtherFlColor)
 # trimming leading or trailing whitespace
@@ -194,9 +202,10 @@ col.DFr.spread<-col.unique.DFr%>%group_by(Catalog.IRN)%>%
   spread(key=x_count,
          value=color,
          fill="")
-#concatinate all the colors                          
+#concatinate all the colors   
+#note:#note make sure to adjust the "1" part. they're the name of columns on "col.DFr.spread"
 col.DFr.con<-col.DFr.spread%>%
-  unite("DomFrColor","1","2","3",remove = FALSE, sep =" ")
+  unite("DomFrColor","1",remove = FALSE, sep =" ")
 #show the white space
 paste(col.DFr.con$DomFrColor)
 # trimming leading or trailing whitespace
@@ -226,7 +235,8 @@ col.OFr.spread<-col.unique.OFr%>%group_by(Catalog.IRN)%>%
   spread(key=x_count,
          value=color,
          fill="")
-#concatinate all the colors                          
+#concatinate all the colors           
+#note make sure to adjust the "1","2","3","4" part. they're the name of columns on "col.OFr.spread"
 col.OFr.con<-col.OFr.spread%>%
   unite("OtherFrColor","1","2","3","4",remove = FALSE, sep =" ")
 #show the white space
@@ -257,8 +267,8 @@ names(colors)
 #concatinate all the color colums
 colors2<-unite(colors,flfrcolors, "DomFlColor", "OtherFlColor", "DomFrColor", "OtherFrColor")
 
-#Combine all the colors amd Part I (Measures_for_Description_RI19_26_27_28_24.csv)
-parts<-read.csv("Measures_for_Description_RI19_26_27_28_24.csv")
+#Combine all the colors amd Part I (Measures_for_Descriptio_All_Old_no_ferns_section1_formatted.csv)
+parts<-read.csv("Measures_for_Descriptio_All_Old_no_ferns_section1_formatted.csv")
 colors2<-data.frame(colors2)
 all<-parts%>%
             left_join(colors2, by="Catalog.IRN")
@@ -267,6 +277,6 @@ all<-parts%>%
 all$all.values<-paste(all$parts, " | ", all$flfrcolors)
 all<-all[,c(1,4)]
 
-#write.csv(all, "DescriptionRI19_26_27_28_24.csv", row.names=FALSE )
+#write.csv(all, "Descriptio_All_Old_no_ferns_section1.csv", row.names=FALSE )
 #Note: couldn't figure out how to delete all hte "|NA" so still need to detail in Excel
 #NOte: two records don't exist in EMu 3825035 and 3835174, 
