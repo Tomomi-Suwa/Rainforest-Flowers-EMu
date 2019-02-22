@@ -257,7 +257,7 @@ OtherFrColor<-OtherFrColor %>%
   mutate_all(tolower)
 
 #=============================================================================================================
-#Part III: left_join all with the part I:Preparing Material Field #####
+#Part III: full_join all with the part I:Preparing Material Field #####
 #=============================================================================================================
 #Join al lthe dataframes 
 colors<-DominantFlColor%>%full_join(OtherFlColor, by="Catalog.IRN") %>%
