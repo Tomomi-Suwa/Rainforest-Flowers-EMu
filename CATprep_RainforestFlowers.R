@@ -66,8 +66,8 @@ flr.spread<-flr.spread %>%
 #rename column names
 library(data.table)
 setnames(flr.spread, old=c("Catalog.IRN","1", "2", "3", "4", "5", "6"), 
-         new=c("irn", "DesMaterials_tab(1)", "DesMaterials_tab(2)", 
-               "DesMaterials_tab(3)", "DesMaterials_tab(4)","DesMaterials_tab(5)", "DesMaterials_tab(6)"))
+         new=c("irn", "DesMaterials_tab(+)", "DesMaterials_tab(+)", 
+               "DesMaterials_tab(+)", "DesMaterials_tab(+)","DesMaterials_tab(+)", "DesMaterials_tab(+)"))
 head(flr.spread)
 
 #write.csv(flr.spread, "Cat.Materials_All_Old_no_ferns_section1.csv",row.names=FALSE)
