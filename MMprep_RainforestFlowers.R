@@ -65,8 +65,10 @@ flr.spread<-flr.spread %>%
 #rename column names
 library(data.table)
 setnames(flr.spread, old=c("1", "2", "3", "4", "5"), 
-         new=c("DetSubject_tab(1)", "DetSubject_tab(2)", 
-               "DetSubject_tab(3)", "DetSubject_tab(4)","DetSubject_tab(5)"))
+         new=c("DetSubject_tab(+)", "DetSubject_tab(+)", 
+               "DetSubject_tab(+)", "DetSubject_tab(+)","DetSubject_tab(+)"))
+#note: use aDetSubject_tab(+) not DetSubject_tab(1) etc, to avoid overwrite
+
 head(flr.spread)
 
 #=============================================================================================================
