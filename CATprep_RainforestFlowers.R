@@ -33,8 +33,8 @@ flr.gather<-gather(flr3, key="category", value= "parts", "Flower", "Fruit", "Any
                    "Anything.else2","Anything.else3","Anything.else4","Anything.else5",
                    "Anything.else6","Anything.else7","Anything.else8","Anything.else9")
 head(flr.gather)
-#delete blank rows
-flr.gather2<-flr.gather %>% na.omit()
+#delete parts= blank
+flr.gather2<-flr.gather[!is.na(flr.gather$parts),] 
 head(flr.gather2)
 #remove the "category" column
 flr.gather3<-flr.gather2[,-8]
