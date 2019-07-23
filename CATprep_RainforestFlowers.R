@@ -15,7 +15,7 @@ head(flr)
 flr2<-flr[,c(2,4,7,10)]
 str(flr2)
 
-#how many rows have NA for colums 3,7 and 10? Answer:181
+#how many rows have NA for colums 4,7 and 10? Answer:181
 flr2NA<-flr2%>%
             filter(is.na(Flower)) %>%
             filter(is.na(Fruit)) %>%
@@ -37,7 +37,7 @@ head(flr.gather)
 flr.gather2<-flr.gather %>% na.omit()
 head(flr.gather2)
 #remove the "category" column
-flr.gather3<-flr.gather2[,-2]
+flr.gather3<-flr.gather2[,-8]
 head(flr.gather3)
 
 #order by Catalog.IRN
