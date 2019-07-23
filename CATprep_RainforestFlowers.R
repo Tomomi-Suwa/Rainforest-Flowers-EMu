@@ -43,18 +43,18 @@ head(flr.gather3)
 #order by Catalog.IRN
 flr.gather3<-flr.gather3[order(flr.gather3$Catalog.IRN),]
 
-#find the unique "parts" for each Catalog.IRN 
-flr.unique<-unique(flr.gather3)
-head(flr.unique)
+#find the unique "parts" for each Catalog.IRN ( 9 unique parts) 
+flr.unique<-unique(flr.gather3$parts)
+flr.unique
 
 #1.3. spread#####
 #createa new column "id.row" based on length within Catalog.IRN
-flr.unique$id.row<- sequence(rle(flr.unique$Catalog.IRN)$length)
-head(flr.unique)
-flr.spread<-spread(flr.unique,
-                 key=id.row,
-                 value=parts,
-                 fill="")
+flr.gather3$id.row<- sequence(rle(flr.gather3$Catalog.IRN)$length)
+head(flr.gather3)
+flr.spread<-spread(flr.gather3,
+                   key=id.row,
+                   value=parts,
+                   fill="")
 head(flr.unique)
 head(flr.spread)
 #1.4.format intos a EMu spread format####
